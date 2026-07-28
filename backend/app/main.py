@@ -29,8 +29,8 @@ app = FastAPI(
 )
 
 # ─── CORS ─────────────────────────────────────────────────────────────────────
-# Support comma-separated list of origins (e.g. Vercel prod + preview URLs)
-_origins = [o.strip() for o in settings.frontend_url.split(",") if o.strip()]
+# Support comma-separated list of origins; strip trailing slashes (CORS-safe)
+_origins = [o.strip().rstrip("/") for o in settings.frontend_url.split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_origins or ["*"],
