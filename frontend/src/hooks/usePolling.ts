@@ -14,15 +14,17 @@ import { useCallback, useRef, useEffect, useState } from "react";
 export function usePolling<T>(
   fetchFn: () => Promise<T>,
   shouldStop: (data: T | null) => boolean,
-  intervalMs: number = 5000
+  intervalMs: number = 5000,
+  enabled: boolean = true
 ) {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(enabled);
   const [error, setError] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const mountedRef = useRef(true);
 
   const poll = useCallback(async () => {
+    if (!enabled) return;
     try {
       const result = await fetchFn();
       if (!mountedRef.current) return;
@@ -40,16 +42,18 @@ export function usePolling<T>(
       // Retry even on error
       timerRef.current = setTimeout(poll, intervalMs);
     }
-  }, [fetchFn, shouldStop, intervalMs]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetchFn, shouldStop, intervalMs, enabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     mountedRef.current = true;
-    poll();
+    if (enabled) {
+      poll();
+    }
     return () => {
       mountedRef.current = false;
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [poll]);
+  }, [poll, enabled]);
 
   return { data, loading, error };
 }

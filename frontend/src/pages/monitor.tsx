@@ -21,14 +21,18 @@ export default function MonitorPage() {
   const runId = Number(router.query.run_id);
 
   const fetchStatus = useCallback(
-    () => getPipelineStatus(runId),
-    [runId]
+    () => {
+      if (!router.isReady || isNaN(runId)) return Promise.reject(new Error("Invalid or missing run_id"));
+      return getPipelineStatus(runId);
+    },
+    [router.isReady, runId]
   );
 
   const { data, loading, error } = usePolling(
     fetchStatus,
-    (d) => d?.state === "TERMINATED" || d?.state === "INTERNAL_ERROR" || d?.state === "SKIPPED",
-    5000
+    (d) => !router.isReady || isNaN(runId) || d?.state === "TERMINATED" || d?.state === "INTERNAL_ERROR" || d?.state === "SKIPPED",
+    5000,
+    router.isReady && !isNaN(runId)
   );
 
   const pipelineDone = data?.state === "TERMINATED";
