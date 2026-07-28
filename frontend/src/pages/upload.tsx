@@ -57,8 +57,8 @@ export default function UploadPage() {
     setRunId(null);
   };
 
-  const goToMonitor = () => {
-    if (runId) router.push(`/monitor?run_id=${runId}`);
+  const goToDashboard = () => {
+    router.push("/aibi");
   };
 
   return (
@@ -165,8 +165,8 @@ export default function UploadPage() {
               )}
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 {runId && (
-                  <button onClick={goToMonitor} className="btn-primary" id="monitor-btn">
-                    <Activity className="w-4 h-4" /> Monitor Pipeline
+                  <button onClick={goToDashboard} className="btn-primary" id="monitor-btn">
+                    <Activity className="w-4 h-4" /> View AI/BI Dashboard
                   </button>
                 )}
                 <button onClick={reset} className="btn-ghost" id="upload-another-btn">

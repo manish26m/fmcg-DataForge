@@ -10,8 +10,6 @@ import { clsx } from "clsx";
 const navItems = [
   { href: "/",             icon: Home,            label: "Home" },
   { href: "/upload",       icon: Upload,          label: "Upload Dataset" },
-  { href: "/monitor",      icon: Activity,        label: "Pipeline Monitor" },
-  { href: "/dashboard",    icon: LayoutDashboard, label: "Analytics" },
   { href: "/aibi",         icon: Sparkles,        label: "AI/BI Dashboard" },
   { href: "/architecture", icon: GitBranch,       label: "Architecture" },
   { href: "/docs",         icon: BookOpen,        label: "Documentation" },
